@@ -2,15 +2,15 @@
 import { ref, onMounted } from 'vue'
 import HomePage from './components/HomePage.vue'
 import OnlineUnbindPage from './components/OnlineUnbindPage.vue'
-import LoginForm from './components/loginform.vue'
+import AdminLogin from './components/AdminLogin.vue'
 import Dashboard from './components/Dashboard.vue'
 import UserPage from './components/UserPage.vue'
 import NotificationPage from './components/NotificationPage.vue'
 import { authApi, maintenanceApi, userProfileApi } from './services/api.js'
 
 // 响应式数据
-const currentPage = ref('home') // 默认为首页
-const loginType = ref('user')
+const currentPage = ref('login') // 默认直接进入登录页面
+const loginType = ref('admin') // 默认为管理员登录
 const isLoggedIn = ref(false)
 const userInfo = ref(null)
 const loading = ref(true)
@@ -37,21 +37,9 @@ const checkLoginStatus = async () => {
         currentPage.value = 'user'
       }
     } else {
-      // 2. 如果未登录，再检查是否是管理员登录路径
-      const path = window.location.pathname
-      const hash = window.location.hash
-      if (path.includes('/admin') || hash.includes('admin')) {
-        loginType.value = 'admin'
-        currentPage.value = 'login'
-      } else {
-        // 默认状态
-        isLoggedIn.value = false
-        userInfo.value = null
-        localStorage.removeItem('userInfo')
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('token')
-        localStorage.removeItem('refreshToken')
-      }
+      // 2. 如果未登录，直接跳转到管理员登录页面
+      loginType.value = 'admin'
+      currentPage.value = 'login'
     }
   } catch (error) {
     console.error('检查登录状态失败:', error)
@@ -97,17 +85,9 @@ const handleLogout = async () => {
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('token')
     localStorage.removeItem('refreshToken')
-    
+
     currentPage.value = 'login'
-    
-    // 根据当前 URL 判断是否显示管理员登录
-    const path = window.location.pathname
-    const hash = window.location.hash
-    if (path.includes('/admin') || hash.includes('admin')) {
-      loginType.value = 'admin'
-    } else {
-      loginType.value = 'user'
-    }
+    loginType.value = 'admin'
   }
 }
 
@@ -292,15 +272,13 @@ onMounted(async () => {
       @back-home="currentPage = 'home'"
       @show-login="showLogin"
     />
-    
+
     <!-- 登录界面 -->
-    <LoginForm 
-      v-else-if="currentPage === 'login'" 
-      :initial-user-type="loginType"
+    <AdminLogin
+      v-else-if="currentPage === 'login'"
       @login-success="handleLoginSuccess"
-      @switch-to-user="loginType = 'user'"
     />
-    
+
     <!-- 管理员界面 -->
     <Dashboard 
       v-else-if="currentPage === 'dashboard'" 

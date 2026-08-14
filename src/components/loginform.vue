@@ -91,9 +91,6 @@
               <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             </button>
           </div>
-          <div class="forgot-password-link">
-            <a href="#" @click.prevent="showForgotPassword = true">忘记密码？</a>
-          </div>
         </div>
 
         <div class="form-actions">
@@ -130,7 +127,6 @@
         </div>
       </div>
 
-      <!-- 注册功能已禁用：仅限管理员账号登录 -->
       </form>
 
       <div v-if="errorMessage" class="message error-message">
