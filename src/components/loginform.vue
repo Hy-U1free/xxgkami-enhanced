@@ -130,12 +130,7 @@
         </div>
       </div>
 
-      <div v-if="userType === 'user'" class="register-link">
-          <span>还没有账号？</span>
-          <button type="button" @click="showRegister = true" class="link-button">
-            立即注册
-          </button>
-        </div>
+      <!-- 注册功能已禁用：仅限管理员账号登录 -->
       </form>
 
       <div v-if="errorMessage" class="message error-message">
