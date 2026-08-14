@@ -171,10 +171,10 @@ const handleLogin = async () => {
   successMessage.value = ''
 
   try {
-    const response = await authApi.adminLogin({
-      username: loginForm.username,
-      password: loginForm.password
-    })
+    const response = await authApi.loginAdmin(
+      loginForm.username,
+      loginForm.password
+    )
 
     if (response.success) {
       // 检查是否需要 TOTP 验证
@@ -220,11 +220,11 @@ const handleTotpLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await authApi.adminLogin({
-      username: loginForm.username,
-      password: loginForm.password,
-      totpCode: loginForm.totpCode
-    })
+    const response = await authApi.loginAdmin(
+      loginForm.username,
+      loginForm.password,
+      loginForm.totpCode
+    )
 
     if (response.success) {
       successMessage.value = '登录成功！'
