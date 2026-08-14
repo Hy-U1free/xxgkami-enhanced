@@ -1,0 +1,44 @@
+# 多阶段构建前端
+
+# 阶段1：构建
+FROM node:18-alpine AS builder
+
+WORKDIR /build
+
+# 复制 package.json 并安装依赖
+COPY package*.json ./
+RUN npm ci --only=production
+
+# 复制源代码并构建
+COPY . .
+RUN npm run build
+
+# 阶段2：运行（Nginx）
+FROM nginx:1.25-alpine
+
+# 删除默认配置
+RUN rm /etc/nginx/conf.d/default.conf
+
+# 复制构建产物
+COPY --from=builder /build/dist /usr/share/nginx/html
+
+# 复制 Nginx 配置
+COPY deployment/nginx.conf /etc/nginx/nginx.conf
+
+# 创建日志目录
+RUN mkdir -p /var/log/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /usr/share/nginx/html
+
+# 安全加固
+RUN apk add --no-cache curl && \
+    # 删除不必要的文件
+    rm -rf /usr/share/nginx/html/*.map
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+EXPOSE 80 443
+
+CMD ["nginx", "-g", "daemon off;"]
