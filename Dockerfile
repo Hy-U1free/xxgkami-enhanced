@@ -29,8 +29,8 @@ RUN apk add --no-cache curl
 # 复制构建产物
 COPY --from=backend-build /app/target/*.jar app.jar
 
-# 创建非 root 用户
-RUN useradd -m -u 1001 appuser && chown -R appuser:appuser /app
+# 创建非 root 用户（Alpine 使用 adduser）
+RUN adduser -D -u 1001 appuser && chown -R appuser:appuser /app
 USER appuser
 
 # 健康检查
