@@ -1,0 +1,6 @@
+{
+  "build_command": "mvn clean package -DskipTests -f backend/pom.xml",
+  "start_command": "java -Xms256m -Xmx512m -XX:+UseG1GC -jar backend/target/*.jar",
+  "install_command": "echo 'Using Maven from container'",
+  "framework": "java"
+}
