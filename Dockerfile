@@ -18,13 +18,13 @@ COPY backend/src ./src
 # 构建应用
 RUN mvn clean package -DskipTests
 
-# 运行时镜像
-FROM openjdk:17-jdk-slim
+# 运行时镜像 - 使用 Eclipse Temurin
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# 安装必要工具
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# 安装必要工具（Alpine 使用 apk）
+RUN apk add --no-cache curl
 
 # 复制构建产物
 COPY --from=backend-build /app/target/*.jar app.jar
