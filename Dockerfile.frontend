@@ -14,9 +14,11 @@ COPY . .
 
 # 接收构建参数
 ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
-
-RUN npm run build
+RUN if [ -n "$VITE_API_BASE_URL" ]; then \
+      VITE_API_BASE_URL="$VITE_API_BASE_URL" npm run build; \
+    else \
+      npm run build; \
+    fi
 
 # 阶段2：运行（Nginx）
 FROM nginx:1.25-alpine
