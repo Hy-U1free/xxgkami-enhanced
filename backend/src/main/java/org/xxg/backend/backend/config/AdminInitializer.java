@@ -3,6 +3,7 @@ package org.xxg.backend.backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.xxg.backend.backend.entity.Admin;
 import org.xxg.backend.backend.mapper.AdminMapper;
@@ -14,6 +15,7 @@ import jakarta.annotation.PostConstruct;
  * 从环境变量读取管理员账号和密码
  */
 @Configuration
+@DependsOn("databaseInitializer")
 public class AdminInitializer {
 
     @Autowired

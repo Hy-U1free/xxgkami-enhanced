@@ -17,7 +17,13 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() {
         try {
-            ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(false, false, "UTF-8", new ClassPathResource("schema-advanced.sql"));
+            ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(
+                    false,
+                    false,
+                    "UTF-8",
+                    new ClassPathResource("schema-core.sql"),
+                    new ClassPathResource("schema-advanced.sql")
+            );
             resourceDatabasePopulator.setContinueOnError(true);
             resourceDatabasePopulator.execute(dataSource);
         } catch (Exception e) {
